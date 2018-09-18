@@ -1,0 +1,76 @@
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  float: left;
+  border: 1px solid black;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+  line-height: 40px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.cell.is-mine {
+  color: red;
+}
+
+.message {
+  font-weight: 600;
+  font-size: 24px;
+  color: #333;
+}
+
+.button {
+  position: relative;
+  background-color: #673ab7;
+  border: none;
+  margin: 8px;
+  font-size: 16px;
+  color: #ffffff;
+  padding: 8px;
+  text-align: center;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.button:after {
+  content: "";
+  background: #673ab7;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s;
+}
+
+.button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s;
+}
+
+.button-group {
+  display: flex;
+}
