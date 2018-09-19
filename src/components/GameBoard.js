@@ -6,11 +6,12 @@ import get from "lodash/get";
 
 class GameBoard extends Component {
   state = {
-    gameOver: false
+    gameOver: false,
+    steppedOnMine: false
   };
 
   componentDidMount() {
-    this.startNewGame({ rows: 10, cols: 12 });
+    this.startNewGame({ rows: 8, cols: 6 });
   }
 
   resetGame = () => {
@@ -46,7 +47,11 @@ class GameBoard extends Component {
     const { isMine, neighbourMineCount } = get(board, [row, col]);
     let newBoard = set(board, [row, col, "isVisited"], true);
     if (isMine) {
-      this.setState({ gameOver: true, message: "Oh no! You lose!" });
+      this.setState({
+        gameOver: true,
+        steppedOnMine: true,
+        message: "Oh no! You lose!"
+      });
     } else if (neighbourMineCount === 0) {
       this.clearEmptyCells(row, col);
     }
@@ -54,7 +59,7 @@ class GameBoard extends Component {
     this.setState(
       { board: newBoard, cellsRemaining: cellsRemaining - 1 },
       () => {
-        if (this.state.cellsRemaining === this.state.mines) {
+        if (this.state.cellsRemaining === this.state.mines && !isMine) {
           this.setState({ gameOver: true, message: "You Won!" });
         }
       }
@@ -73,7 +78,15 @@ class GameBoard extends Component {
             [neighbour.row, neighbour.col, "isVisited"],
             true
           );
-          this.setState({ board: newBoard });
+          this.setState(
+            {
+              board: newBoard
+            },
+            () =>
+              this.setState(state => ({
+                cellsRemaining: state.cellsRemaining - 1
+              }))
+          );
           if (neighbour.neighbourMineCount === 0) {
             this.clearEmptyCells(neighbour.row, neighbour.col, board);
           }
@@ -104,10 +117,12 @@ class GameBoard extends Component {
   }
 
   render() {
-    const { board, message } = this.state;
+    const { board, message, cellsRemaining, mines, steppedOnMine } = this.state;
+    const displayMessage =
+      cellsRemaining === mines && !steppedOnMine ? "You won!" : message;
     return (
       <div className="game-container">
-        <div className="message">{message}</div>
+        <div className="message">{displayMessage}</div>
         <div>{board && this.renderBoard(board)}</div>
         <div className="button-group">
           <button className="button" onClick={this.resetGame}>
